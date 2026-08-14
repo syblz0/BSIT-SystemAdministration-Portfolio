@@ -1,26 +1,42 @@
+# Week 1 – Building My Professional Environment
 
-# Hi, I'm Syron 
+## Student Information
+- Name: Syron B. Blaza
+- Course: BSIT
+- Section: 4A
+- Date: August 7, 2026
 
-## About Me
-I'm a 4th year BSIT student, currently focused on system administration and web development. I like building things I can actually see and use, which is probably why web dev caught my interest early on — there's something satisfying about watching a page go from a blank screen to something that actually works.
+## Objectives
+This week's goal was to set up all the core tools I'll be using throughout the semester for system administration work, and to create the professional online accounts (GitHub) I'll be maintaining as part of my coursework. I also wanted to get comfortable with basic Git and GitHub workflows since I'll be using them to document my progress every week.
 
-## Career Goals
-I'm aiming to work as a web developer after graduating, ideally somewhere I can keep growing my skills and eventually take on bigger, more complex projects. Long term, I'd like to get comfortable enough with both the front-end and back-end side of things that I'm not limited to just one part of a project.
+---
 
-## Current Skills
-- Building websites (front-end focused, still growing my back-end skills)
-- Comfortable learning new tools through trial and error
+## Software Installed
+- Git
+- GitHub Desktop
+- Visual Studio Code
+- VirtualBox
+- Ubuntu Desktop ISO
+- Windows 11 Enterprise Evaluation ISO
 
-## Technologies I Want to Learn
-- Cloud platforms (AWS or Azure)
-- More hands-on system administration tools (VirtualBox, Linux server setups)
+---
 
-## Certifications
-None yet — but it's something I'm planning to work on as I get further into my IT courses.
+## Professional Accounts
+GitHub: https://github.com/syblz0
+LinkedIn: https://www.linkedin.com/in/syron-blaza-451770427/
 
-## Academic Projects
-- **E-commerce Website** — a project I built to practice full web development, from layout to functionality.
-- **Barangay Information Management System** *(in progress)* — a system I'm currently developing to help manage barangay records and information more efficiently.
+---
 
-## Contact Information
-📧 blazasyron5@gmail.com
+## Installation Screenshots
+<img width="632" height="189" alt="image" src="https://github.com/user-attachments/assets/665e9b90-f93f-4242-b3cf-2fc98c45dbc4" />
+<img width="626" height="341" alt="image" src="https://github.com/user-attachments/assets/0d7289a4-6f9b-491c-8b2c-f4e75cc3f647" />
+
+
+---
+
+## Challenges Encountered
+1. **Slow internet connection** — Downloading the installers and ISO files (especially the Windows 11 Enterprise and Ubuntu ISOs) took much longer than expected because of my slow internet connection. To work around this, I let the downloads run in the background while working on other parts of the activity so I wouldn't waste time waiting.
+
+2.. **Empty folders not showing up in Git** — After creating my Week01–Week15 folders, they didn't appear as changes in GitHub Desktop because Git doesn't track empty folders. I fixed this by adding a placeholder file inside each folder.
+
+3. **Duplicate file name error when creating README.md** — When I tried to create a README.md file inside my week01 folder, GitHub gave me an error saying a file with the same name already existed, since I had already added a placeholder file there earlier. I fixed this by opening the existing file and editing it directly instead of trying to create a new one.
