@@ -1,90 +1,103 @@
 Week 03 – Ubuntu Server Deployment
 BSIT Self-Paced Learning Module: System Administration and Maintenance
 
-Prepared by: Syron B. Blaza, ABC Startup Solutions
+Prepared by: Syron B. Blaza
 
 Project Overview
-ABC Startup Solutions is deploying its first Linux server to support file sharing, remote administration, database hosting, web hosting, and internal services. This repository documents the full deployment process: installing Ubuntu Server on Oracle VirtualBox following recommended enterprise practices, verifying the resulting server, comparing BIOS and UEFI firmware, mapping the Linux boot process, installing Windows Server Evaluation as a comparison platform, and evaluating Windows Server, Ubuntu Server, and Rocky Linux against each other.
+
+For this project, I was asked to set up the first Linux server for ABC Startup Solutions. This server will be used for file sharing, remote administration, database hosting, web hosting, and some internal services. I installed Ubuntu Server on VirtualBox, checked that everything was working after install, compared BIOS and UEFI, made a boot process flowchart, and also installed Windows Server as a bring-home activity to compare it with Ubuntu and Rocky Linux.
 
 Learning Objectives
-Deploy a clean Ubuntu Server virtual machine using recommended enterprise installation practices.
-Verify server functionality after installation (login, hostname, IP address, connectivity, updates, SSH).
-Compare BIOS and UEFI firmware and explain why UEFI has become the modern standard.
-Document the Linux boot process from power-on to login prompt.
-Install Windows Server Evaluation as a bring-home comparison exercise.
-Compare Windows Server, Ubuntu Server, and Rocky Linux for enterprise use cases.
-Produce professional documentation reproducible by another administrator.
+-Install Ubuntu Server the correct way, following good practices.
+-Check that the server is working properly after installation (login, hostname, IP, internet, updates, SSH).
+-Learn the difference between BIOS and UEFI and why UEFI is used more now.
+-Understand the steps a Linux server goes through when it boots up.
+-Install Windows Server Evaluation as an extra activity.
+-Compare Windows Server, Ubuntu Server, and Rocky Linux.
+-Make documentation that another person could follow and understand.
+
 Virtual Machine Specifications
-Component	Configured Value
-Name	Ubuntu-Server-Week03
-RAM	1536–2048 MB (reduced from the 4 GB spec to match host hardware — see Challenges Encountered)
-CPU	2 Virtual Processors
-Storage	40 GB (VDI, dynamically allocated)
-Network	NAT (Intel PRO/1000 MT Desktop Adapter)
-Optical Drive	ubuntu-24.04.4-live-server-amd64.iso
+
+Component		Value I Used
+Name			Ubuntu-Server-Week03
+RAM				1536–2048 MB (I lowered this from 4 GB because my laptop only has 3.5 GB total RAM)
+CPU				2 Virtual Processors
+Storage			40 GB (VDI, dynamically allocated)
+Network			NAT
+Optical Drive	ubuntu-2
+
+
 Installation Summary
 
-Ubuntu Server 24.04.4 LTS was installed via the standard text-based installer:
+Here's what I did to install Ubuntu Server:
+1. Picked Ubuntu Server (the normal one, not the minimized version).
+2. Used DHCP for the network — it gave my server the IP 10.0.2.15/24 on enp0s3.
+3. For storage, I used guided setup with the whole disk, set up as LVM, formatted as ext4.
+4. Set the hostname to server01 and made a normal (non-root) admin user.
+5. Turned on OpenSSH server so I could connect to it remotely later.
+6. Didn't add any extra packages, since the instructions said not to.
+7. Let it finish installing, removed the ISO, then rebooted.
 
-Selected Ubuntu Server (full, not minimized) as the installation base.
-Accepted DHCP networking — interface enp0s3 was assigned 10.0.2.15/24.
-Used guided storage configuration with the entire disk set up as an LVM group, formatted as ext4 (/ = 18.996 GB, /boot = 2.000 GB).
-Set hostname to server01 and created a non-root administrative user.
-Enabled Install OpenSSH server for remote administration.
-Skipped optional server snaps (no additional packages, per company policy).
-Completed installation, detached the ISO, and rebooted into the installed system.
-
-Full step-by-step details and screenshots are in InstallationGuide.pdf.
+More details and screenshots are in InstallationGuide.pdf.
 
 Configuration Summary
 
-After first boot, the server was updated and its SSH service was explicitly enabled and started:
-
-bash
+After the first login, I updated the system and made sure SSH was actually running:
 sudo apt update
 sudo apt upgrade -y
 sudo systemctl enable ssh
 sudo systemctl start ssh
-Verification Results
-Task	Command	Result
-Login	—	Successful login as configured admin user
-Hostname	hostname	server01
-IP Address	ip addr	10.0.2.15/24 on enp0s3
-Internet Connectivity	ping -c 4 google.com	4/4 packets received, 0% packet loss
-System Update	sudo apt update && sudo apt upgrade -y	Completed successfully, system up to date
-SSH Service	systemctl status ssh	Active: active (running)
-BIOS vs UEFI Highlights
-	BIOS	UEFI
-Mode	16-bit real mode	32/64-bit mode
-Partition style	MBR (max 2 TB, 4 primary partitions)	GPT (>2 TB, up to 128 partitions)
-Security	None built-in	Secure Boot
-Boot speed	Slower, sequential init	Faster, supports parallel init
 
-Why UEFI has largely replaced BIOS: UEFI resolves BIOS's core limitations — slow 16-bit initialization, the 2 TB/4-partition MBR ceiling, and the total absence of boot-time security. Secure Boot alone (verifying only trusted, signed bootloaders load) is a major reason virtually all PCs and servers built in the last decade ship with UEFI as the default. Full discussion in BIOS_vs_UEFI.pdf.
+
+Verification Results
+
+Task			Command Used			What Happened
+Login			—						Logged in fine with the account I made
+Hostname		hostname				Showed server01
+IP Address		ip addr					Showed 10.0.2.15/24 on enp0s3
+Internet		ping -c 4 google.com	4/4 packets received, 0% lost
+Update			sudo apt update &&      Finished with no errors
+				sudo apt upgrade -y	
+SSH				systemctl status ssh	Showed active (running)
+
+
+BIOS vs UEFI Highlights
+
+					BIOS							UEFI
+Mode				16-bit							32/64-bit
+Partition type		MBR (max 2 TB, 4 partitions)	GPT (bigger than 2 TB, up to 128 partitions)
+Security			Nothing built in				Has Secure Boot
+Boot speed			Slower							Faster
+
+Why UEFI is used more now: BIOS is old technology — it's slow and can only handle disks up to 2 TB because of how MBR works. UEFI fixes that with GPT, which supports way bigger disks and more partitions. UEFI also has Secure Boot, which stops untrusted software from loading when the computer starts, something BIOS can't do at all. Because of this, almost every computer and server made in the last several years uses UEFI instead of BIOS. Full comparison is in BIOS_vs_UEFI.pdf.
+
 
 Boot Process Flowchart
 
-Show Image
+<img width="850" height="1100" alt="BootProcessFlowchart drawio" src="https://github.com/user-attachments/assets/e59c2de7-56e0-4f61-ace4-20d3066f1c71" />
 
 Power On → BIOS/UEFI Initialization → Boot Device Detection → Boot Loader (GRUB) → Linux Kernel → init/systemd → Services Start → Login Prompt
+Full version: BootProcessFlowchart.pdf
 
-Full-size version: BootProcessFlowchart.pdf
 
 Challenges Encountered
-Host RAM constraints: VirtualBox refused to save VM settings at 4096 MB RAM (“more than 80% of the host computer's memory is assigned”) on a host with only 3.5 GB total RAM. Resolved by lowering Base Memory to 1536–2048 MB.
-CPU soft lockup during installation: The Ubuntu VM froze mid-install with watchdog: BUG: soft lockup — CPU#0 stuck for 58s, caused by host CPU exhaustion from other running applications. Resolved by closing unnecessary host programs and letting the install resume.
-Stale VM registration after a crash: VirtualBox lost track of the VM (Failed to open virtual machine … same UUID as an existing virtual machine) after an unexpected shutdown. Resolved by editing VirtualBox.xml to remove the conflicting <MachineEntry> and re-adding the VM — no data was lost, since the .vdi/.vbox files remained intact on disk.
-SSH installed but inactive: systemctl status ssh showed inactive (dead) immediately after first boot despite OpenSSH being selected during setup. Resolved with sudo systemctl enable ssh && sudo systemctl start ssh.
-Slow Windows Server installation: The bring-home Windows Server Evaluation install took several hours on the same constrained hardware; resolved simply by allowing it to run uninterrupted rather than cancelling it.
+
+- My laptop only has 3.5 GB of RAM, so VirtualBox wouldn't let me use 4 GB for the VM like the assignment said. I had to lower it to        1536–2048 MB instead.
+- The VM froze while installing Ubuntu, and the screen showed something about the CPU being "stuck." This happened because I had too many   other programs open at the same time.
+- After VirtualBox crashed once, my VM disappeared from the list completely. I had to go into a file called VirtualBox.xml and delete one   line to fix it. My actual files were okay the whole time, VirtualBox just lost track of them.
+- SSH was supposed to be installed already, but when I checked it, it said "inactive." I had to turn it on manually.
+- Installing Windows Server took a really long time (a few hours) because of the same low RAM/CPU problem.
+
 Reflection
 
-This project was my first hands-on experience deploying a Linux server from scratch, and most of what I actually learned came from things going wrong rather than the installation steps themselves going smoothly. The VM specs in the assignment assumed more RAM than my laptop actually has, so early on I had to learn how to read VirtualBox's warnings, understand why they were happening, and make a reasonable engineering trade-off — dropping RAM allocation instead of blindly following a spec sheet that didn't fit my hardware. That felt like a small but real taste of what system administration is actually like: adapting standard procedures to the constraints of the environment in front of you.
+This was my first time actually installing a Linux server on my own, and honestly most of what I learned came from things breaking, not from the parts that went smoothly. The assignment wanted 4 GB of RAM for the VM but my laptop doesn't even have that much total, so I had to figure out how to lower it without breaking anything else. That was annoying at first but it also taught me that you can't just follow instructions exactly if your hardware is different — you have to adjust and explain why.
 
-The scariest moment was when the VM disappeared from VirtualBox Manager entirely after a crash. My first assumption was that I'd lost hours of work. Instead, I learned that the actual virtual disk and configuration files were untouched on disk — only VirtualBox's internal registry had gotten out of sync. Tracking that down meant opening an XML file I'd never seen before and carefully removing one specific line without breaking anything else. That was a good lesson in staying calm and checking the actual state of the filesystem before assuming the worst.
+The scariest part was when my VM disappeared from VirtualBox after it crashed. I thought I lost everything I did that day. But after looking into it, I found out the actual files were still saved on my computer, VirtualBox just "forgot" about them because of some ID mismatch in a settings file. I had to edit that file directly, which I had never done before, and it worked. That taught me not to panic right away and to actually check what's going on before assuming the worst.
 
-I also didn't expect that a service could show as "installed" during setup but still be inactive after boot. Running systemctl status ssh and seeing inactive (dead) when I expected active (running) taught me not to trust an installer's checkbox as proof that something is actually working — verification has to happen against the live system, not against what you told the installer to do.
+I also didn't know that a service could be "installed" but still not running. When I checked SSH with systemctl status ssh, it said inactive even though I picked the option to install it during setup. I had to turn it on myself with a command. This showed me that checking a box during install doesn't always mean something is actually working, you have to verify it yourself after.
 
-Comparing BIOS vs UEFI and researching Windows Server, Ubuntu, and Rocky Linux side by side also connected the hands-on work to the bigger picture: why an enterprise would choose one platform over another isn't just about technical specs, it's about licensing cost, existing infrastructure, and who's going to be maintaining it. Overall, this project took much longer than I expected, mostly due to my hardware limitations, but troubleshooting through those limitations taught me more than a clean, uneventful install would have.
+Comparing BIOS and UEFI, and also comparing Windows Server, Ubuntu, and Rocky Linux, helped me understand that choosing an OS isn't only about which one is "better" technically. It's also about cost, what the company already uses, and who is going to manage it. Overall this project took me a lot longer than I thought it would, mostly because of my laptop's limits, but I think I learned more from fixing all these problems than I would have if everything just worked on the first try.
+
 
 References
 Ubuntu Server Documentation — https://ubuntu.com/server/docs
