@@ -1,0 +1,7 @@
+# References
+
+1. CompTIA. IT Certifications. httpswww.comptia.orgcertifications
+2. Cisco. CCNA Certification. httpswww.cisco.comcertificationsccna
+3. Red Hat. RHCSA Certification. httpswww.redhat.comcertificationrhcsa
+4. Microsoft Learn. Azure Administrator Certification. httpslearn.microsoft.comcertificationsazure-administrator
+5. Ubuntu. Ubuntu Server. httpsubuntu.comserver
